@@ -167,5 +167,37 @@ no ip address
 mpls l2transport route X.X.X.X 800
 ```
 
+## VPLS
 
+- Service that emulate LAN
+- Issue with AToM is you have to fully meshed it to support full LAN - BUM traffic
 
+### Configs
+- VFI needs to have a unique name on the PE router
+- PE#1
+```
+mpls label protocol ldp
+mpls ldp router-id Loopback0 force
+l2 vfi cust-1 manual
+vpn id 1
+!
+! Neighbor of PE#2
+!
+neighbor X.X.X.2 encapsulation mpls
+!
+! Neighbor of PE#3
+!
+neighbor X.X.X.3 encapsulation mpls
+!
+! Customer facing interface
+!
+interface FastEthernet4/2
+no ip address
+switchport
+switchport access vlan 111
+spanning-tree bpdufilter enable
+!
+interface Vlan111
+no ip address
+xconnect vfi cust-1
+```
