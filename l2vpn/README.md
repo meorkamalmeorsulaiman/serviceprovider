@@ -201,3 +201,47 @@ interface Vlan111
 no ip address
 xconnect vfi cust-1
 ```
+Validate `show vfi cust-1`, validate targeted hello `show mpls ldp neighbor`
+
+- Trunk port VPLS
+- PE#1
+```
+! Customer facing interface
+!
+interface FastEthernet4/2
+no ip address
+switchport
+switchport trunk encapsulation dot1q
+switchport trunk allowed vlan 111,222
+switchport mode trunk
+!
+l2 vfi cust-1-111 manual
+vpn id 1
+neighbor X.X.X.X encapsulation mpls
+neighbor X.X.X.X encapsulation mpls
+!
+l2 vfi cust-1-222 manual
+vpn id 2
+neighbor X.X.X.X encapsulation mpls
+neighbor X.X.X.X encapsulation mpls
+!
+interface Vlan111
+no ip address
+xconnect vfi cust-1-111
+!
+interface Vlan222
+no ip address
+xconnect vfi cust-1-222
+```
+- QinQ
+- PE#1
+```
+! Customer facing interface
+!
+interface FastEthernet4/2
+no ip address
+switchport
+switchport access vlan 111
+switchport mode dot1q-tunnel
+spanning-tree bpdufilter enable
+!
